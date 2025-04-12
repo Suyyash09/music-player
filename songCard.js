@@ -24,7 +24,7 @@ audioElements.classList.add(
 
 const playElement = document.createElement("audio");
 playElement.classList.add(".audio-player");
-playElement.autoplay = true;
+// playElement.autoplay = true;
 playElement.controls = true;
 
 const audioButtons = document.createElement("div");

@@ -1,4 +1,5 @@
 import songs from "./songs.js";
+import { updateSongCard } from "./songCard.js";
 
 const genres = [
   "All",
@@ -10,9 +11,9 @@ const genres = [
   "Country",
 ];
 
-const { id, name, artist, image, genre, source } = songs;
+// const { id, name, artist, image, genre, source } = songs;
 
-const songList = document.querySelector("#allSongs-template");
+const songList = document.getElementById("allSongs-template");
 
 const filterInput = document.createElement("label");
 filterInput.textContent = "Filter by Genre";
@@ -27,9 +28,9 @@ const songsName = document.createElement("label");
 songsName.textContent = "Songs Name";
 songList.appendChild(songsName);
 
-const songsList = document.createElement("div");
-songsList.classList.add("songs-list");
-songList.appendChild(songsList);
+const songsListContainer = document.createElement("div");
+songsListContainer.classList.add("songs-list");
+songList.appendChild(songsListContainer);
 
 genres.forEach((genre) => {
   const option = document.createElement("option");
@@ -38,7 +39,25 @@ genres.forEach((genre) => {
   option.textContent = genre;
   filter.appendChild(option);
 });
+function render() {
+  songsListContainer.innerHTML = "";
 
-// genres.forEach((genre) => {
-//   if(genre.includes("All") || genre.includes(genre)) {
-// });
+  songs.forEach((song) => {
+    if (filter.value === song.genre || filter.value === "All") {
+      const songItem = document.createElement("button");
+      songItem.classList.add("btn", "btn-sm", "btn-secondary");
+      songItem.style.width = "100%";
+      songItem.style.margin = "3px"; // Add this line
+      songItem.style.display = "block"; // Add this line
+      songItem.textContent = song.name;
+      songsListContainer.appendChild(songItem);
+      songItem.addEventListener("click", () => {
+        updateSongCard(song.id);
+      });
+    }
+  });
+}
+
+render();
+
+filter.addEventListener("change", render);

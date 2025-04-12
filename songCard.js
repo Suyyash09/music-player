@@ -4,8 +4,6 @@ const song_Card = document.getElementById("songCard-template");
 export const faceCard = document.createElement("div");
 faceCard.classList.add("card", "container", "text-center");
 
-let song_no = 0;
-
 const imageElement = document.createElement("img");
 imageElement.classList.add("card-image", "img-thumbnail", "row");
 
@@ -24,7 +22,7 @@ audioElements.classList.add(
 
 const playElement = document.createElement("audio");
 playElement.classList.add(".audio-player");
-// playElement.autoplay = true;
+playElement.autoplay = true;
 playElement.controls = true;
 
 const audioButtons = document.createElement("div");
@@ -55,31 +53,42 @@ audioElements.appendChild(playElement);
 audioButtons.appendChild(prevButton);
 audioButtons.appendChild(nextButton);
 
-function updateSongCard() {
-  const currentSong = songs[song_no];
+export function updateSongCard(id) {
+  // Find the song object in the songs array that matches the given id
+  const currentSong = songs.find((song) => song.id === id);
 
-  imageElement.src = currentSong.image;
-  imageElement.alt = currentSong.name;
-  songName.textContent = currentSong.name;
-  songArtist.textContent = currentSong.artist;
-  playElement.src = currentSong.source;
-  playElement.load(); // Load the new audio source
+  // Check if a song with the given id was found
+  if (currentSong) {
+    imageElement.src = currentSong.image;
+    imageElement.alt = currentSong.name;
+    songName.textContent = currentSong.name;
+    songArtist.textContent = currentSong.artist;
+    playElement.src = currentSong.source;
+    playElement.load(); // Load the new audio source
+  } else {
+    console.error(`Song with id ${id} not found.`);
+    // Optionally, update the UI to indicate that the song wasn't found
+  }
 }
+
+let song_no = 0; // Initialize the song number
 
 document.addEventListener("DOMContentLoaded", () => {
   prevButton.addEventListener("click", () => {
     song_no = (songs.length + (song_no - 1)) % songs.length;
-    console.log(song_no);
-    updateSongCard();
+    const currSong = songs[song_no].id;
+    console.log(currSong);
+    updateSongCard(currSong);
   });
 
   nextButton.addEventListener("click", () => {
     song_no = (song_no + 1) % songs.length;
-    console.log(song_no);
-    updateSongCard();
+    const currSong = songs[song_no].id;
+    console.log(currSong);
+    updateSongCard(currSong);
   });
 
-  updateSongCard(); // Initial call to display the first song
+  // updateSongCard(); // Initial call to display the first song
 });
 
-updateSongCard();
+updateSongCard(songs[0].id); // Initial call to display the first song
